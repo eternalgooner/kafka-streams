@@ -1,6 +1,7 @@
 package com.david.kafkastreams.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 
@@ -24,7 +25,6 @@ public class JsonSerializer<T> implements Serializer<T> {
     public byte[] serialize(String topic, Object data) {
         if (data == null)
             return null;
-
         try {
             return mapper.writeValueAsBytes(data);
         } catch (Exception e) {

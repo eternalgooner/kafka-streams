@@ -1,9 +1,10 @@
 # A sample Springboot Kafka Streams application 
 
 ## Introduction
-This demo application uses Kafka Streams Aggregation. The aggregation objects used in the app are football teams.  
+This demo application uses Kafka Streams Aggregation. The aggregation objects used in the app are football teams and leagues.
+A league will have an aggregate of football teams.
 
-There are can be many football teams in a league. In this demo app the sample data used to initialize the DB table `league_agg` looks like this:  
+In this demo app the sample data used to initialize the DB table `league_agg` looks like this:  
 
 | id          | name        | expected_count |
 | ----------- | ----------- | -------------- |
@@ -19,10 +20,10 @@ then it will deem the aggregate complete and send it to the output topic.
 ## The App Contains
 - Kafka Stream Producer to simulate a stream of messages arriving on a streams topic
 - Kafka Stream Consumer to consume the stream of messages arriving on the streams topic
-- Kafka Local State Store which is used to query to state of the aggregated stream
+- Kafka Local State Store which is used to update & query the state of the aggregated stream
 - Kafka Producer to send the final aggregated message to the next topic for processing
-- API endpoint to get the current aggregated total for a given key (league)
-  - Exposed at `http://localhost:8080/store/total/{league}`
+- API endpoint to get the current aggregate state for a given key (league)
+  - Exposed at `http://localhost:8080/store/{league}`
   - Calling the endpoint before the consumer stream is running with that key (league) will throw an error
 
 ## Prerequisites
@@ -38,7 +39,7 @@ This producer reads in a csv file with football team data.
 3. Start the Kafka Streams Consumer which will then  
    (i) group the messages by key (league name)  
    (ii) aggregates the messages using the key  
-   (iii) create the local state store, ready for queries  
+   (iii) create the local state store, ready for queries & updates  
    (iv) checks if the aggregate is complete and ready to be sent to the output topic 
 4. Two aggregated messages should appear on the output topic after the 1st producer has sent all the csv data (for the leagues `prem` and `champ` which both have their
 expected count of teams met. The league `laliga` never receives its expected
@@ -46,7 +47,7 @@ count and thus no message is ever sent for that league)
 
 Once the application is running you can test it working with a new key aggregation by:
 - Manually insert another record into the DB table `league-agg` e.g `insert into league_agg values (4, "bundesliga", "3");`
-- Manually send in 3 Kafka messages to the topic `team-stream` making sure to use the matching key (league name) used in the previous SQL insert
+- Manually send in 3 Kafka messages to the topic `team-stream` making sure to use the matching key for the record (league name) used in the previous SQL insert
 - Observe the logs and watch as the first 2 messages are received and log that the expected count isn't met yet
 - On the 3rd message received, it should trigger sending the aggregate message to the output topic
 
@@ -54,8 +55,12 @@ Once the application is running you can test it working with a new key aggregati
 ## Kafka Stream Concepts
 - Topology
   - Each Stream has a Topology
-  - A Topology describes what you want to do with the stream e.g. group, aggregate, filter, etc.
+  - A Topology describes what you want to do with the stream e.g. group, aggregate, filter, count etc.
 - Changelog
   - Under the hood, Kafka aggregates the stream and stores it in a changelog (another topic)
 - State Store
-  - A State Store (local or global) can be used to externalise the values of the changelog
+  - A State Store (local or global) can be used to store the state of a stream
+  - it can also be used to query the present state of the store
+- Stream Processor
+  - The processor has its own API and can be used in the Streams API
+  - In this app, the processor is used as the last step in the topology and processes the stream records

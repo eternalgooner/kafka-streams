@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import static com.david.kafkastreams.config.KafkaConsumerStreamProperties.TEAM_STREAM_TOPIC;
 
 /**
- * Class that reads in a csv file, converts to a List<FootballTeam> and sends to a topic
+ * Class that reads in a csv file, converts to a List<FootballTeam> and sends to the input stream topic
  */
 @Service
 public class KafkaProducerStream implements Runnable {

@@ -12,19 +12,12 @@ import java.util.Set;
 /**
  *  This class represents the total aggregated view of all grouped Football Teams
  *  The League POJO will hold all grouped Football Teams, using their league name as the grouping key
- *
- *  A new instance of this class is used by the Kafka Stream every time a new key is detected
  */
 public class FootballTeamAggregation implements KafkaMessage {
 
-//    private League league = new League();
     private String name;
     private Set<FootballTeam> teamSet = new HashSet<>();
     private int expectedCount;
-
-    public FootballTeamAggregation() {
-        System.out.println("instantiating new FTA...should only happen when new key detected");
-    }
 
     // get reference to Spring Bean from POJO
     private TeamAggregationExpectedCountRepo getRepo() {

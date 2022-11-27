@@ -1,7 +1,6 @@
 package com.david.kafkastreams.config;
 
 import com.david.kafkastreams.kafka.KafkaMessage;
-import com.david.kafkastreams.model.FootballTeam;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
- * This Entity is used to get the expected count from the DB
+ * Entity used to get the expected count from the DB
  */
 @Entity
 @Table(name = "league_agg")

@@ -8,15 +8,10 @@ import org.apache.kafka.streams.StreamsConfig;
 
 import java.util.Properties;
 
-/**
- *  Class to store Kafka Stream properties
- *
- */
 public class KafkaConsumerStreamProperties {
 
     public static final String TEAM_STREAM_TOPIC = "team-stream";
     public static final String FINAL_TEAM_AGGREGATE_TOPIC = "final-team-aggregate";
-    public static final String AGG_TEAM_STORE = "agg-team-store";
 
     public static Properties getProperties() {
         Properties properties = new Properties();
